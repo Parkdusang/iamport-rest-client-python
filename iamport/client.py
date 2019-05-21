@@ -57,6 +57,11 @@ class Iamport(object):
         response = self.requests_session.post(url, headers=headers, data=payload)
         return self.get_response(response)
 
+    def _delete(self, url):
+        headers = self.get_headers()
+        response = self.requests_session.delete(url, headers=headers)
+        return self.get_response(response)
+
     def find_by_merchant_uid(self, merchant_uid):
         url = '{}payments/find/{}'.format(self.imp_url, merchant_uid)
         return self._get(url)
@@ -86,6 +91,19 @@ class Iamport(object):
                 raise KeyError('Essential parameter is missing!: %s' % key)
 
         return self._post(url, kwargs)
+
+    def get_billing_key(self, customer_uid, **kwargs):
+        url = '{}subscribe/customers/{}'.format(self.imp_url, customer_uid)
+        for key in ['card_number', 'expiry', 'birth', 'pwd_2digit']:
+            if key not in kwargs:
+                raise KeyError('Essential parameter is missing!: %s' % key)
+
+        return self._post(url, kwargs)
+
+    def delete_billing_key(self, customer_uid):
+        url = '{}subscribe/customers/{}'.format(self.imp_url, customer_uid)
+
+        return self._delete(url)
 
     def pay_again(self, **kwargs):
         url = '{}subscribe/payments/again'.format(self.imp_url)
