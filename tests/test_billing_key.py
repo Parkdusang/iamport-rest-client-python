@@ -15,7 +15,7 @@ def test_get_billing_key(iamport):
     res = iamport.get_billing_key(valid_customer_uid)[0]
 
     expected = {
-        'card_name': '현대카드',
+        'card_name': u'현대카드',
         'card_number': '43302887****9512',
         'customer_uid': valid_customer_uid
     }
